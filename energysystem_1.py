@@ -23,7 +23,7 @@ solver_verbose = False  # show/hide solver output
 #wind and pv feed in and electricity demand : 
 #fuelprices & development : Prognos AG 2013; Hecking et al. 2017; Schlesinger et al. 2014; World Bank 2017; DLR Rheinland-Pfalz 2017; Scheftelowitz et al. 2016
 #efficiency : Wietschel et al. 2010
-date_time_index = pd.date_range('1/1/2018', periods = 100, freq = 'H' )
+date_time_index = pd.date_range('1/1/2018', periods = 289080, freq = 'H' )
 
 energysystem = solph.EnergySystem(timeindex=date_time_index)
 
@@ -91,7 +91,7 @@ energysystem.add(solph.Source(label='rgas', outputs={bgas: solph.Flow(
 
 # source wind onshore
 energysystem.add(solph.Source(label='wind_on', outputs={bel: solph.Flow(fixed=True, 
-        actual_value=data['Wind_on'], investment = solph.Investment(ep_costs=epc_wind_on,maximum=60000))}))
+        actual_value=data['Wind_on'], investment = solph.Investment(ep_costs=epc_wind_on,maximum=1187840))}))
 
 #source wind offshore
 energysystem.add(solph.Source(label='wind_off', outputs={bel: solph.Flow(fixed=True, 
