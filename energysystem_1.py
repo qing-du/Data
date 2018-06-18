@@ -75,7 +75,7 @@ energysystem.add( bcoal, blignite, bgas, bel)
 
 # source coal new
 energysystem.add(solph.Source(label='coal_new', outputs={bcoal: solph.Flow(
-    nominal_value=800, variable_costs = 9.6)}))
+    variable_costs = 9.6)}))
 
 # source lignite old
 #energysystem.add(solph.Source(label='lignite_old', outputs={bcoal_new: solph.Flow(
@@ -83,11 +83,11 @@ energysystem.add(solph.Source(label='coal_new', outputs={bcoal: solph.Flow(
 
 # source lignite new
 energysystem.add(solph.Source(label='lignite_new', outputs={bcoal: solph.Flow(
-    nominal_value=1000, variable_costs = 1.8)}))
+    variable_costs = 1.8)}))
 
 # source natural gas
 energysystem.add(solph.Source(label='rgas', outputs={bgas: solph.Flow(
-    nominal_value=200, variable_costs = 21)}))
+    variable_costs = 21)}))
 
 # source wind onshore
 energysystem.add(solph.Source(label='wind_on', outputs={bel: solph.Flow(fixed=True, 
