@@ -32,11 +32,11 @@ filename = os.path.join(os.path.dirname(__file__), 'reference_scenario_normalise
 data = pd.read_csv(filename)
 
 # investment for each energy carrier
-#epc_coal_old = economics.annuity(capex=1650, n=40, wacc=0.056)
+epc_coal_old = economics.annuity(capex=1650, n=40, wacc=0.056)
 
 epc_coal_new = economics.annuity(capex=1650, n=40, wacc=0.056)
 
-#epc_lignite_old = economics.annuity(capex=1900, n=40, wacc=0.056)
+epc_lignite_old = economics.annuity(capex=1900, n=40, wacc=0.056)
 
 epc_lignite_new = economics.annuity(capex=1900, n=40, wacc=0.056)
 
@@ -104,7 +104,8 @@ energysystem.add(solph.Source(label='pv', outputs={bel: solph.Flow(fixed=True,
 
 # create simple sink object for electrical demand for each electrical bus
 
-nominal_BAU = 406000000/data ['normalised_load_profile']
+sum_nominal_load_values = 6348.4153
+nominal_BAU = 420000000/sum_nominal_load_values
 
 solph.Sink(label='demand_elec', inputs={bel: solph.Flow(
        actual_value=data ['normalised_load_profile'] , fixed=True, nominal_value= nominal_BAU)})
@@ -113,11 +114,11 @@ solph.Sink(label='demand_elec', inputs={bel: solph.Flow(
 # Create all Transformers
 
 # transformer coal old
-#energysystem.add(solph.Transformer(
-       #label="pp_coal_old", 
-       #inputs={bcoal: solph.Flow()}, 
-       #outputs = {bel: solph.Flow(nominal_value = None, variable_costs=6,investment=solph.Investment(ep_costs=epc_coal_old))},
-       #conversion_factors ={bel:0.46}))
+energysystem.add(solph.Transformer(
+       label="pp_coal_old", 
+       inputs={bcoal: solph.Flow()}, 
+       outputs = {bel: solph.Flow(nominal_value = None, variable_costs=6,investment=solph.Investment(ep_costs=epc_coal_old))},
+       conversion_factors ={bel:0.46}))
 
 # transformer coal new
 energysystem.add(solph.Transformer(
@@ -127,11 +128,11 @@ energysystem.add(solph.Transformer(
     conversion_factors={bel: 0.5}))
 
 # transformer lignite old
-#energysystem.add(solph.Transformer(
-    #label="pp_lignite_old",
-    #inputs={blignite: solph.Flow()},
-    #outputs={bel: solph.Flow(nominal_value = None, variable_costs=10,investment=solph.Investment(ep_costs=epc_lignite_old))},
-    #conversion_factors={bel: 0.45}))
+energysystem.add(solph.Transformer(
+    label="pp_lignite_old",
+    inputs={blignite: solph.Flow()},
+    outputs={bel: solph.Flow(nominal_value = None, variable_costs=10,investment=solph.Investment(ep_costs=epc_lignite_old))},
+    conversion_factors={bel: 0.45}))
 
 # transformer lignite new
 energysystem.add(solph.Transformer(
