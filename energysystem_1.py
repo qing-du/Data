@@ -23,12 +23,12 @@ solver_verbose = False  # show/hide solver output
 #wind and pv feed in and electricity demand : 
 #fuelprices & development : Prognos AG 2013; Hecking et al. 2017; Schlesinger et al. 2014; World Bank 2017; DLR Rheinland-Pfalz 2017; Scheftelowitz et al. 2016
 #efficiency : Wietschel et al. 2010
-date_time_index = pd.date_range('1/1/2018', periods = 289080, freq = 'H' )
+date_time_index = pd.date_range('1/1/2018', periods = 8760, freq = 'H' )
 
 energysystem = solph.EnergySystem(timeindex=date_time_index)
 
 #input_data
-filename = os.path.join(os.path.dirname(__file__), 'reference_scenario.csv')
+filename = os.path.join(os.path.dirname(__file__), 'reference_scenario_normalised_el_demand.csv')
 data = pd.read_csv(filename)
 
 # investment for each energy carrier
@@ -103,8 +103,11 @@ energysystem.add(solph.Source(label='pv', outputs={bel: solph.Flow(fixed=True,
 
 
 # create simple sink object for electrical demand for each electrical bus
+
+nominal_BAU = 406000000/data ['normalised_load_profile']
+
 solph.Sink(label='demand_elec', inputs={bel: solph.Flow(
-       actual_value= data['el_demand'], fixed=True, nominal_value=1)})
+       actual_value=data ['normalised_load_profile'] , fixed=True, nominal_value= nominal_BAU)})
 
 
 # Create all Transformers
