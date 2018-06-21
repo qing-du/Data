@@ -46,6 +46,44 @@ es.energysystem.dump(dpath=None, filename=None)
 # define an alias for shorter calls below (optional)
 results = es.energysystem.results['main']
 
+# geeting data of the Data Frame
+df = processing.create_dataframe(om)
+print('--------------------DataFrame-----------------') 
+print(df)
+
+
+
+# creating a result dictionary containing node parameters
+p_results = processing.param_results(om)
+print('-------------------ParamResults---------------')
+print(p_results)
+
+
+
+
+electricity_bus     = views.node(results, 'electricity')
+#coal_bus            = views.node(results, 'coal')
+
+#coal_transformer    = views.node(results,'pp_coal')
+#gas_transformer     = views.node(results, 'pp_gas')
+
+wind_on_source      = views.node(results, 'wind_on')
+wind_off_source     = views.node(results, 'wind_off')
+
+print('')
+print('--------invest wind_on-------------')
+print(wind_on_source['scalars'])
+#print(wind_on_source['sequences'])
+print('-------end invest wind_on------------')
+
+print('')
+print('--------invest wind_off-------------')
+print(wind_off_source['scalars'])
+#print(wind_on_source['sequences'])
+print('-------end invest wind_off------------')
+
+
+
 # print a time slice of the state of charge
 print('')
 print('********* State of Charge (slice) *********')
@@ -54,7 +92,7 @@ print('')
 
 # get all variables of a specific component/bus
 #custom_storage = views.node(results, 'storage')
-electricity_bus = views.node(results, 'electricity')
+
 
 # plot the time series (sequences) of a specific component/bus
 if plt is not None:
@@ -71,4 +109,8 @@ print('')
 # print the sums of the flows around the electricity bus
 print('********* Main results *********')
 print(electricity_bus['sequences'].sum(axis=0))
+
+
+
+
 
