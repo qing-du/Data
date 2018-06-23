@@ -26,7 +26,7 @@ solver_verbose = False  # show/hide solver output
 #fuelprices & development : Prognos AG 2013; Hecking et al. 2017; Schlesinger et al. 2014; World Bank 2017; DLR Rheinland-Pfalz 2017; Scheftelowitz et al. 2016
 #efficiency : Wietschel et al. 2010
 
-date_time_index = pd.date_range('1/1/2018', periods = 10, freq = 'H' )
+date_time_index = pd.date_range('1/1/2018', periods = 8760, freq = 'H' )
 
 energysystem = solph.EnergySystem(timeindex=date_time_index)
 
@@ -157,7 +157,7 @@ energysystem.add(solph.Source(label='pv', outputs={bel: solph.Flow(fixed=True,
 
 
 solph.Sink(label='demand_elec', inputs={bel: solph.Flow(
-       actual_value=data ['normalised_load_profile'] , fixed=True, nominal_value= nominal_BAU)})
+       actual_value=data ['normalised_load_profile'] , fixed=True, nominal_value= nominal_traffic_heat)})
 
 
 # Create all Transformers

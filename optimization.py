@@ -45,9 +45,14 @@ es.energysystem.dump(dpath=None, filename=None)
 results = es.energysystem.results['main']
 
 ######## create different Data Frame for the different scearnaios#############
+############create excel file of max. capacites of each technology############
 conservatice_df = pd.DataFrame()
 neutral_df = pd.DataFrame()
 optimistic_df = pd.DataFrame()
+
+mbc = pd.DataFrame()
+
+###################conservative scenario #####################################
 
 if es.capex_wind_on == capex_scenarios.loc[capex_scenarios.index[0],'capex_wind_on']:
         
@@ -56,6 +61,29 @@ if es.capex_wind_on == capex_scenarios.loc[capex_scenarios.index[0],'capex_wind_
     fn = os.path.join(os.path.dirname(__file__), 'conservative_DataFrame.xlsx')
     pd.DataFrame(conservative_df).to_excel(fn)
     
+    #1 get the maximum capacities of each technology mbc = maximum built capacity
+    
+    mbc = conservative_df.loc[conservative_df.variable_name == 'invest', ['value', 'oemof_tuple']]
+
+    # rename the index with the name of the investment flow 
+    a = 0
+    while a < mbc.index.size:
+        mbc.rename(index= { mbc.index[a]: (mbc.loc[mbc.index[a],'oemof_tuple'])}, inplace= True)
+        a+=1
+   
+    
+    
+    fn = os.path.join(os.path.dirname(__file__), 'conservative_scenario_capacities.csv')
+    pd.DataFrame(mbc).to_csv(fn)
+    
+    # get max capacity of renewables
+    max_capacity_pv       = mbc.loc[mbc.index[5], 'value']
+    max_capacity_wind_off = mbc.loc[mbc.index[6], 'value']
+    max_capacity_wind_on  = mbc.loc[mbc.index[7], 'value']
+    
+    mbc.plot(kind ='bar')
+   
+############################neutral scenario#################################
 if es.capex_wind_on == capex_scenarios.loc[capex_scenarios.index[1],'capex_wind_on']:
     
     neutral_df = processing.create_dataframe(om)
@@ -63,7 +91,22 @@ if es.capex_wind_on == capex_scenarios.loc[capex_scenarios.index[1],'capex_wind_
     fn = os.path.join(os.path.dirname(__file__), 'neutral_DataFrame.xlsx')
     pd.DataFrame(conservative_df).to_excel(fn)
     
-           
+    #1 get the maximum capacities of each technology mbc = maximum built capacity
+    mbc = neutral_df.loc[neutral_df.variable_name == 'invest', ['value', 'oemof_tuple']]
+ 
+    # rename the index with the name of the investment flow 
+    a = 0
+    while a < mbc.index.size:
+        mbc.rename(index= { mbc.index[a]: (mbc.loc[mbc.index[a],'oemof_tuple'])}, inplace= True)
+        a+=1
+     
+    fn = os.path.join(os.path.dirname(__file__), 'neutral_scenario_capacities.csv')
+    pd.DataFrame(mbc).to_csv(fn)
+    
+    mbc.plot(kind ='bar')
+
+
+######################optimistic scenario######################################         
 if es.capex_wind_on == capex_scenarios.loc[capex_scenarios.index[2],'capex_wind_on']:
     
     optimistic_df = processing.create_dataframe(om)
@@ -71,37 +114,25 @@ if es.capex_wind_on == capex_scenarios.loc[capex_scenarios.index[2],'capex_wind_
     fn = os.path.join(os.path.dirname(__file__), 'optimistic_DataFrame.xlsx')
     pd.DataFrame(conservative_df).to_excel(fn)
    
-    
-    
+    #1 get the maximum capacities of each technology mbc = maximum built capacity
+    mbc = optimistic_df.loc[optimistic_df.variable_name == 'invest', ['value', 'oemof_tuple']]
+   
+    # rename the index with the name of the investment flow 
+    a = 0
+    while a < mbc.index.size:
+        mbc.rename(index= { mbc.index[a]: (mbc.loc[mbc.index[a],'oemof_tuple'])}, inplace= True)
+        a+=1
+   
+    fn = os.path.join(os.path.dirname(__file__), 'optimistic_scenario_capacities.csv')
+    pd.DataFrame(mbc).to_csv(fn)
+
+    mbc.plot(kind ='bar')
+
+
+
 df = processing.create_dataframe(om)
 # creating a result dictionary containing node parameters
 p_results = processing.param_results(om)
-
-################################
-#calculating material costs
-################################
-# showing the different capacities of each scenario
-
-
-#1 get the maximum capacities of each technology mbc = maximum built capacity
-mbc = df.loc[df.variable_name == 'invest', ['value', 'oemof_tuple']]
-
-# rename the index with the name of the investment flow 
-a = 0
-while a < mbc.index.size:
-    mbc.rename(index= { mbc.index[a]: (mbc.loc[mbc.index[a],'oemof_tuple'])}, inplace= True)
-    a+=1
-   
-print(mbc)
-
-# plot the max. installed capacity of all used technologies
-mbc.plot(kind = 'bar')
-
-# get max capacity of renewables
-max_capacity_pv       = mbc.loc[mbc.index[5], 'value']
-max_capacity_wind_off = mbc.loc[mbc.index[6], 'value']
-max_capacity_wind_on  = mbc.loc[mbc.index[7], 'value']
-
 
 electricity_bus     = views.node(results, 'electricity')
 #coal_bus            = views.node(results, 'coal')
@@ -111,7 +142,7 @@ electricity_bus     = views.node(results, 'electricity')
 
 wind_on_source      = views.node(results, 'wind_on')
 wind_off_source     = views.node(results, 'wind_off')
-
+pv_source           = views.node(results, 'pv')
 print('')
 print('--------invest wind_on-------------')
 print(wind_on_source['scalars'])
@@ -132,6 +163,11 @@ print('********* State of Charge (slice) *********')
 
 print('')
 
+print('')
+print('--------invest wind_on-------------')
+print(pv_source['scalars'])
+#print(wind_on_source['sequences'])
+print('-------end invest wind_on------------')
 # get all variables of a specific component/bus
 #custom_storage = views.node(results, 'storage')
 
