@@ -92,11 +92,10 @@ epc_pv = economics.annuity(capex=capex_pv, n=25, wacc=0.021)
 ##########
 
 # Create all Buses
-#bcoal_old = solph.Bus(label = "coal_old") 
+
 
 bcoal = solph.Bus(label = "coal")
 
-#blignite_old = solph.Bus(label = "lignite_old")
 
 blignite = solph.Bus(label = "lignite")
 
@@ -141,6 +140,21 @@ energysystem.add(solph.Source(label='rgas', outputs={bgas: solph.Flow(
 eeg_wind_on  = -7
 eeg_wind_off = -1.9
 eeg_Pv       = -22
+
+
+
+
+energysystem.add(solph.Source(label='pv_old', outputs={bel: solph.Flow(
+    actual_value=data['PV'], nominal_value=43790, fixed=True)}))
+
+energysystem.add(solph.Source(label='wind_on_old', outputs={bel: solph.Flow(
+    actual_value=data['Wind_on'], nominal_value=52320, fixed=True)}))
+
+energysystem.add(solph.Source(label='wind_off_old', outputs={bel: solph.Flow(
+    actual_value=data['Wind_off'], nominal_value=5380, fixed=True)}))
+
+
+
 # source wind onshore
 energysystem.add(solph.Source(label='wind_on', outputs={bel: solph.Flow(fixed=True, 
         actual_value=data['Wind_on'],variable_costs = eeg_wind_on , investment = solph.Investment(ep_costs=epc_wind_on,maximum=1187840))}))
@@ -154,10 +168,10 @@ energysystem.add(solph.Source(label='pv', outputs={bel: solph.Flow(fixed=True,
         actual_value=data['PV'], variable_costs = eeg_Pv, investment = solph.Investment(ep_costs=epc_pv,maximum=275000))}))
 
 
+energysystem.add(solph.Sink(label = 'electricity_excess', inputs={bel:solph.Flow()}))
 
-
-solph.Sink(label='demand_elec', inputs={bel: solph.Flow(
-       actual_value=data ['normalised_load_profile'] , fixed=True, nominal_value= nominal_traffic_heat)})
+energysystem.add(solph.Sink(label='demand_elec', inputs={bel: solph.Flow(
+       actual_value=data ['normalised_load_profile'] , fixed=True, nominal_value= nominal_traffic_heat)}))
 
 
 # Create all Transformers
