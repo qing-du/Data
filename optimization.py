@@ -112,7 +112,7 @@ if es.capex_wind_on == capex_scenarios.loc[capex_scenarios.index[2],'capex_wind_
     optimistic_df = processing.create_dataframe(om)
     print('#### this is the optimistic scenario#########')
     fn = os.path.join(os.path.dirname(__file__), 'optimistic_DataFrame.xlsx')
-    pd.DataFrame(conservative_df).to_excel(fn)
+    pd.DataFrame(optimistic_df).to_excel(fn)
    
     #1 get the maximum capacities of each technology mbc = maximum built capacity
     mbc = optimistic_df.loc[optimistic_df.variable_name == 'invest', ['value', 'oemof_tuple']]

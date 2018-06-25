@@ -61,9 +61,9 @@ CO2_cost = 16
 filename1 = os.path.join(os.path.dirname(__file__), 'capex_scenarios_renewables.xlsx')
 capex_scenarios = pd.read_excel(filename1)
 
-capex_wind_on   = capex_scenarios.loc[capex_scenarios.index[2],'capex_wind_on']
-capex_wind_off  = capex_scenarios.loc[capex_scenarios.index[2], 'capex_wind_off']
-capex_pv        = capex_scenarios.loc[capex_scenarios.index[2], 'capex_pv']
+capex_wind_on   = capex_scenarios.loc[capex_scenarios.index[0],'capex_wind_on']
+capex_wind_off  = capex_scenarios.loc[capex_scenarios.index[0], 'capex_wind_off']
+capex_pv        = capex_scenarios.loc[capex_scenarios.index[0], 'capex_pv']
 
 ###################### END of secetion part ##################################
 
