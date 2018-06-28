@@ -171,17 +171,12 @@ energysystem.add(solph.Source(label='pv', outputs={bel: solph.Flow(fixed=True,
 energysystem.add(solph.Sink(label = 'electricity_excess', inputs={bel:solph.Flow()}))
 
 energysystem.add(solph.Sink(label='demand_elec', inputs={bel: solph.Flow(
-       actual_value=data ['normalised_load_profile'] , fixed=True, nominal_value= nominal_traffic_heat)}))
+       actual_value=data ['normalised_load_profile'] , fixed=True, nominal_value= nominal_BAU)}))
 
 
 # Create all Transformers
 
-# transformer coal old
-energysystem.add(solph.Transformer(
-       label="pp_coal_old", 
-       inputs={bcoal: solph.Flow()}, 
-       outputs = {bel: solph.Flow(nominal_value = None, variable_costs=5,investment=solph.Investment(ep_costs=epc_coal_old))},
-       conversion_factors ={bel:0.35}))
+
 
 # transformer coal new
 energysystem.add(solph.Transformer(
@@ -190,12 +185,7 @@ energysystem.add(solph.Transformer(
     outputs={bel: solph.Flow(nominal_value = None, variable_costs=5,investment=solph.Investment(ep_costs=epc_coal_new))},
     conversion_factors={bel: 0.5}))
 
-# transformer lignite old
-energysystem.add(solph.Transformer(
-    label="pp_lignite_old",
-    inputs={blignite: solph.Flow()},
-    outputs={bel: solph.Flow(nominal_value = None, variable_costs=5,investment=solph.Investment(ep_costs=epc_lignite_old))},
-    conversion_factors={bel: 0.35}))
+
 
 # transformer lignite new
 energysystem.add(solph.Transformer(

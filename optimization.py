@@ -73,13 +73,10 @@ if es.capex_wind_on == capex_scenarios.loc[capex_scenarios.index[0],'capex_wind_
    
     
     
-    fn = os.path.join(os.path.dirname(__file__), 'conservative_scenario_capacities.csv')
+    fn = os.path.join(os.path.dirname(__file__), 'network_capacities.csv')
     pd.DataFrame(mbc).to_csv(fn)
     
-    # get max capacity of renewables
-    max_capacity_pv       = mbc.loc[mbc.index[5], 'value']
-    max_capacity_wind_off = mbc.loc[mbc.index[6], 'value']
-    max_capacity_wind_on  = mbc.loc[mbc.index[7], 'value']
+  
     
     mbc.plot(kind ='bar')
    
@@ -143,6 +140,12 @@ electricity_bus     = views.node(results, 'electricity')
 wind_on_source      = views.node(results, 'wind_on')
 wind_off_source     = views.node(results, 'wind_off')
 pv_source           = views.node(results, 'pv')
+
+
+fn = os.path.join(os.path.dirname(__file__), 'electricity_bus_sequences.csv')
+pd.DataFrame(electricity_bus['sequences']).to_csv(fn)
+
+
 print('')
 print('--------invest wind_on-------------')
 print(wind_on_source['scalars'])
@@ -179,6 +182,9 @@ if plt is not None:
     electricity_bus['sequences'].plot(kind='line', drawstyle='steps-post')
     plt.show()
 
+
+
+
 # print the solver results
 print('********* Meta results *********')
 pp.pprint(es.energysystem.results['meta'])
@@ -188,7 +194,8 @@ print('')
 print('********* Main results *********')
 print(electricity_bus['sequences'].sum(axis=0))
 
-
+fn = os.path.join(os.path.dirname(__file__), 'standard_neetwork_electricity_sum_feedin.xlsx')
+electricity_bus['sequences'].sum(axis=0).to_excel(fn)
 
 
 

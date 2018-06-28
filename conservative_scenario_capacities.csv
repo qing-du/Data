@@ -1,9 +1,0 @@
-,,value,oemof_tuple
-pp_coal_new,electricity,49550.624,"(<oemof.solph.network.Transformer object at 0x0000011D7B1EA1D8>, <oemof.solph.network.Bus object at 0x0000011D7B1E19F8>)"
-pp_coal_old,electricity,0.0,"(<oemof.solph.network.Transformer object at 0x0000011D7B1EA048>, <oemof.solph.network.Bus object at 0x0000011D7B1E19F8>)"
-pp_gas,electricity,25239.214,"(<oemof.solph.network.Transformer object at 0x0000011D7B1EAB88>, <oemof.solph.network.Bus object at 0x0000011D7B1E19F8>)"
-pp_lignite_new,electricity,0.0,"(<oemof.solph.network.Transformer object at 0x0000011D7B1EA818>, <oemof.solph.network.Bus object at 0x0000011D7B1E19F8>)"
-pp_lignite_old,electricity,0.0,"(<oemof.solph.network.Transformer object at 0x0000011D7B1EA548>, <oemof.solph.network.Bus object at 0x0000011D7B1E19F8>)"
-pv,electricity,69391.697,"(<oemof.solph.network.Source object at 0x0000011D7B1E89A8>, <oemof.solph.network.Bus object at 0x0000011D7B1E19F8>)"
-wind_off,electricity,0.0,"(<oemof.solph.network.Source object at 0x0000011D7B1E8818>, <oemof.solph.network.Bus object at 0x0000011D7B1E19F8>)"
-wind_on,electricity,0.0,"(<oemof.solph.network.Source object at 0x0000011D7B1E8688>, <oemof.solph.network.Bus object at 0x0000011D7B1E19F8>)"
