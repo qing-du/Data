@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jun 18 14:13:17 2018
 
-@author: duqi1
+"""
+Optimisation
 """
 
 from oemof import solph

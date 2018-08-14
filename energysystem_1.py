@@ -26,7 +26,7 @@ solver_verbose = False  # show/hide solver output
 #fuelprices & development : Prognos AG 2013; Hecking et al. 2017; Schlesinger et al. 2014; World Bank 2017; DLR Rheinland-Pfalz 2017; Scheftelowitz et al. 2016
 #efficiency : Wietschel et al. 2010
 
-date_time_index = pd.date_range('1/1/2018', periods = 8760, freq = 'H' )
+date_time_index = pd.date_range('1/1/2018', periods = 500, freq = 'H' )
 
 energysystem = solph.EnergySystem(timeindex=date_time_index)
 
@@ -168,7 +168,7 @@ energysystem.add(solph.Source(label='pv', outputs={bel: solph.Flow(fixed=True,
         actual_value=data['PV'], variable_costs = eeg_Pv, investment = solph.Investment(ep_costs=epc_pv,maximum=275000))}))
 
 
-energysystem.add(solph.Sink(label = 'electricity_excess', inputs={bel:solph.Flow()}))
+energysystem.add(solph.Sink(label = 'electricity_excess', inputs={bel:solph.Flow(variable_costs = eeg_Pv)}))
 
 energysystem.add(solph.Sink(label='demand_elec', inputs={bel: solph.Flow(
        actual_value=data ['normalised_load_profile'] , fixed=True, nominal_value= nominal_BAU)}))
