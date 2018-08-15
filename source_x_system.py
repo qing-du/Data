@@ -69,9 +69,6 @@ sum_nominal_load_values = 6348.4153 # fixed value of the normalized el_demand se
 
 # use the choosen variable for the actuel value in the network SINK
 nominal_BAU = 420000000/sum_nominal_load_values # business as usual 
-nominal_traffic_heat = 506000000/sum_nominal_load_values # traffic and heat included 
-
-
 # investment for each energy carrier
 
 epc_x = economics.annuity(capex=10000000000000000, n=30, wacc=0.5)
@@ -86,12 +83,12 @@ epc_pv = economics.annuity(capex=717500, n=25, wacc=0.021)
 
 # MAXIMUM Capacity
    
-max_pv_Si   = 26400
-max_pv_CIGS = 550
-max_pv_CdTe = 550  
+max_pv_Si   = 264000
+max_pv_CIGS = 5500
+max_pv_CdTe = 5500  
        
-max_wind_on_hyprid    = 56579
-max_wind_on_asynchron = 56579
+max_wind_on_hyprid    = 565790
+max_wind_on_asynchron = 565790
        
 max_wind_off_pure = 45000    
 
@@ -107,9 +104,9 @@ energysystem.add(bel)
 #####################################Sources##################################
 # source X
 energysystem.add(solph.Source(label='rx', 
-outputs={bel: solph.Flow(nominal_value = None, 
-variable_costs = variable_costs_x, 
-investment = solph.Investment(ep_costs=epc_x))}))
+outputs={bel: solph.Flow(nominal_value = 43000)}))
+#variable_costs = variable_costs_x, 
+#investment = solph.Investment(ep_costs=epc_x)
 
    
 # source wind onshore
@@ -153,15 +150,17 @@ energysystem.add(solph.Source(label='pv_CdTe',
 ####################################SINK######################################
 energysystem.add(solph.Sink(label='demand_elec', 
     inputs={bel: solph.Flow(
-    actual_value=data ['normalised_load_profile'] , fixed=True, nominal_value= nominal_BAU)}))
+    actual_value=data ['normalised_load_profile'] , fixed=True, 
+    nominal_value= nominal_BAU)}))
 
-#energysystem.add(solph.Sink(label = 'electricity_excess', inputs={bel:solph.Flow(variable_costs = 1000000)}))
+energysystem.add(solph.Sink(label = 'electricity_excess', 
+    inputs={bel:solph.Flow(variable_costs = 0)}))
     
 ################################Storage########################################
 energysystem.add(solph.components.GenericStorage(label='storage',
     inputs={bel: solph.Flow()},
     outputs={bel: solph.Flow()},
-    nominal_capacity=129000,
+    nominal_capacity = 500000,
     inflow_conversion_factor=1, outflow_conversion_factor=1))
 
         
