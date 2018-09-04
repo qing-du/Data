@@ -163,36 +163,43 @@ energysystem.add(solph.components.GenericStorage(label='storage',
     nominal_capacity = 500000,
     inflow_conversion_factor=1, outflow_conversion_factor=1))
 
-        
+############END OF NETWORK#####################################################
+
+####################Start of Optimization and data collecting ################
+      
 om = solph.Model(energysystem)
 om.solve(solver = 'cbc', solve_kwargs ={'tee':True})
         
-print('----------capacity energy system---------')
-my_results_capacity = processing.results(om)
 energysystem.results['main'] = processing.results(om)
 energysystem.results['meta'] = processing.meta_results(om)
-        #
+#
 energysystem.dump(dpath=None, filename=None)
+    # define an alias for shorter calls below (optional)
+
+results = energysystem.results['main']
+
 # define an alias for shorter calls below (optional)
-results_capacity = energysystem.results['main']
-electricity_bus     = views.node(results_capacity, 'electricity')
-        
-# plot the time series (sequences) of a specific component/bus
-if plt is not None:
+#results_capacity = energysystem.results['main']
 
-            plt.show()
-            electricity_bus['sequences'].plot(kind='line', drawstyle='steps-post')
-            plt.show()
+electricity_bus    = views.node(results, 'electricity')
 
-# print the solver resul
-print('********* Meta results *********')
-pp.pprint(es.energysystem.results['meta'])
-print('')
-    
-# print the sums of the flows around the electricity bus
-print('********* Main results *********')
-print(electricity_bus['sequences'].sum(axis=0))
-          
+sourceX            = views.node(results, 'rx')
+wind_on_hydprid    = views.node(results, 'wind_on_hypride')
+wind_on_asynchron  = views.node(results, 'wind_on_asynchron')
+wind_on_pure       = views.node(results, 'wind_on_pure')
+
+pv_Si              = views.node(results, 'pv_Si')
+pv_CIGS            = views.node(results, 'pv_CIGS')
+pv_CdTe            = views.node(results, 'pv_CdTe')
+
+storage            = views.node(results, 'storage')
+electricty_excess  = views.node (results, 'electricity_excess') 
+
+
+
+######## create different Data Frame for the different scearnaios#############
+############create excel file of max. capacites of each technology############
+
 mbc= processing.create_dataframe(om)
 
 
@@ -203,7 +210,51 @@ pd.DataFrame(mbc).to_excel(fn)
     
 mbc = mbc.loc[mbc.variable_name == 'invest', ['value', 'oemof_tuple']]
 
-print(mbc)     
+print(mbc)
+    # rename the index with the name of the investment flow 
+# rename the index with the name of the investment flow 
+a = 0
+while a < mbc.index.size:
+    mbc.rename(index= { mbc.index[a]: (mbc.loc[mbc.index[a],'oemof_tuple'])}, inplace= True)
+    a+=1
+
+fn = os.path.join(os.path.dirname(__file__), 'built_capacities_source_x.csv')
+pd.DataFrame(mbc).to_csv(fn)
 
 
-        
+mbc.plot(kind = 'bar')
+
+df = processing.create_dataframe(om)
+# creating a result dictionary containing node parameters
+p_results = processing.param_results(om)
+
+
+
+fn = os.path.join(os.path.dirname(__file__), 'source_x_electricity_hourly.xlsx')
+electricity_bus['sequences'].to_excel(fn)
+
+
+
+fn = os.path.join(os.path.dirname(__file__), 'source_x_electricity_sum_feedin.xlsx')
+electricity_bus['sequences'].sum(axis=0).to_excel(fn)
+      
+# plot the time series (sequences) of a specific component/bus
+if plt is not None:
+
+            plt.show()
+            electricity_bus['sequences'].plot(kind='line', drawstyle='steps-post')
+            plt.show()
+
+# print the solver results
+print('********* Meta results *********')
+pp.pprint(es.energysystem.results['meta'])
+print('')
+    
+# print the sums of the flows around the electricity bus
+print('********* Main results *********')
+print(electricity_bus['sequences'].sum(axis=0))
+          
+
+
+
+      

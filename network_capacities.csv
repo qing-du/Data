@@ -1,7 +1,0 @@
-,,value,oemof_tuple
-pp_coal_new,electricity,43211.773,"(<oemof.solph.network.Transformer object at 0x0000013CF9A7EC78>, <oemof.solph.network.Bus object at 0x0000013CF9A63458>)"
-pp_gas,electricity,18356.497,"(<oemof.solph.network.Transformer object at 0x0000013CF9A83C78>, <oemof.solph.network.Bus object at 0x0000013CF9A63458>)"
-pp_lignite_new,electricity,0.0,"(<oemof.solph.network.Transformer object at 0x0000013CF9A7ECC8>, <oemof.solph.network.Bus object at 0x0000013CF9A63458>)"
-pv,electricity,275000.0,"(<oemof.solph.network.Source object at 0x0000013CF9A7ABD8>, <oemof.solph.network.Bus object at 0x0000013CF9A63458>)"
-wind_off,electricity,0.0,"(<oemof.solph.network.Source object at 0x0000013CF9A7AA48>, <oemof.solph.network.Bus object at 0x0000013CF9A63458>)"
-wind_on,electricity,0.0,"(<oemof.solph.network.Source object at 0x0000013CF9A7A8B8>, <oemof.solph.network.Bus object at 0x0000013CF9A63458>)"
