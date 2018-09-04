@@ -81,14 +81,15 @@ epc_wind_off = economics.annuity(capex=4000000, n=25, wacc=0.048)
 epc_pv = economics.annuity(capex=717500, n=25, wacc=0.021)
 
 
+
 # MAXIMUM Capacity
    
 max_pv_Si   = 264000
 max_pv_CIGS = 5500
-max_pv_CdTe = 5500  
+max_pv_CdTe = 5500
        
-max_wind_on_hyprid    = 565790
-max_wind_on_asynchron = 565790
+max_wind_on_hyprid    = 593920
+max_wind_on_asynchron = 593920
        
 max_wind_off_pure = 45000    
 
@@ -97,16 +98,16 @@ max_wind_off_pure = 45000
 ##########
 
 bel = solph.Bus(label = "electricity")
-
+b_wind_off = solph.Bus(label = 'electricity_wind_off')
 # add all Buses to the EnergySystem
 energysystem.add(bel)
-
+energysystem.add(b_wind_off)
 #####################################Sources##################################
 # source X
 energysystem.add(solph.Source(label='rx', 
-outputs={bel: solph.Flow(nominal_value = 43000)}))
-#variable_costs = variable_costs_x, 
-#investment = solph.Investment(ep_costs=epc_x)
+  outputs={bel: solph.Flow(nominal_value = None,
+   variable_costs = variable_costs_x,
+   investment = solph.Investment(ep_costs=epc_x))}))
 
    
 # source wind onshore
@@ -122,15 +123,26 @@ energysystem.add(solph.Source(label='wind_on_asynchron',
     investment = solph.Investment(ep_costs=epc_wind_on,
     maximum=max_wind_on_asynchron))}))
     
+
+ 
+
 #source wind offshore 
 energysystem.add(solph.Source(label='wind_off_pure', 
-    outputs={bel: solph.Flow(fixed=True, 
+    outputs={b_wind_off: solph.Flow(fixed=True, 
     actual_value=data['Wind_off'], 
     investment = solph.Investment(ep_costs=epc_wind_off,
     maximum=max_wind_off_pure))}))
+  
     
-    
-# source pv     
+#connection wind off electricity excess and b electricity
+
+energysystem.add(solph.Transformer(
+    label="t_wind_off",
+    inputs={b_wind_off: solph.Flow()},
+    outputs={bel: solph.Flow()},
+    conversion_factors={bel: 1}))
+
+# source pv  
 energysystem.add(solph.Source(label='pv_Si', 
     outputs={bel: solph.Flow(fixed=True, 
     actual_value=data['PV'],
@@ -154,13 +166,13 @@ energysystem.add(solph.Sink(label='demand_elec',
     nominal_value= nominal_BAU)}))
 
 energysystem.add(solph.Sink(label = 'electricity_excess', 
-    inputs={bel:solph.Flow(variable_costs = 0)}))
+    inputs={b_wind_off:solph.Flow(variable_costs = 1.391, investment = solph.Investment(maximum = 22500))}))
     
 ################################Storage########################################
 energysystem.add(solph.components.GenericStorage(label='storage',
     inputs={bel: solph.Flow()},
     outputs={bel: solph.Flow()},
-    nominal_capacity = 500000,
+    nominal_capacity = 129100,
     inflow_conversion_factor=1, outflow_conversion_factor=1))
 
 ############END OF NETWORK#####################################################
@@ -182,6 +194,7 @@ results = energysystem.results['main']
 #results_capacity = energysystem.results['main']
 
 electricity_bus    = views.node(results, 'electricity')
+wind_off_bus       = views.node(results, 'electricity_wind_off')
 
 sourceX            = views.node(results, 'rx')
 wind_on_hydprid    = views.node(results, 'wind_on_hypride')
@@ -245,6 +258,15 @@ if plt is not None:
             electricity_bus['sequences'].plot(kind='line', drawstyle='steps-post')
             plt.show()
 
+
+if plt is not None:
+
+            plt.show()
+            wind_off_bus['sequences'].plot(kind='line', drawstyle='steps-post')
+            plt.show()
+
+
+
 # print the solver results
 print('********* Meta results *********')
 pp.pprint(es.energysystem.results['meta'])
@@ -254,7 +276,7 @@ print('')
 print('********* Main results *********')
 print(electricity_bus['sequences'].sum(axis=0))
           
-
+electricity_bus['sequences'].sum(axis=0).plot(kind = 'bar')
 
 
       
