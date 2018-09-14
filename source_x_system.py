@@ -1,7 +1,10 @@
 """
 General description:
 ---------------------
-
+contributors:
+    Qing Du
+    Carina Geyer
+    Carsten Hammer
 
 Installation requirements:
 ---------------------------
@@ -84,14 +87,14 @@ epc_pv_thin     = economics.annuity(capex = 800000, n=25, wacc=0.021)
 
 # MAXIMUM Capacity
    
-max_pv_Si   = 163026*0.5 #220000 
+max_pv_Si   = 163026*0.5 # 220000  
 max_pv_CIGS = 27500
 max_pv_CdTe = 27500
        
 max_wind_on_hybrid    = 593920
 max_wind_on_asynchron = 593920
        
-max_wind_off_pure = 0.5*45000    
+max_wind_off_pure = 0.5 * 45000    
 
 ###########
 # 2 Built the network
@@ -201,6 +204,7 @@ results = energysystem.results['main']
 
 electricity_bus    = views.node(results, 'electricity')
 wind_off_bus       = views.node(results, 'electricity_wind_off')
+pv_bus             = views.node(results, 'electricity_pv')
 
 sourceX            = views.node(results, 'rx')
 wind_on_hydprid    = views.node(results, 'wind_on_hypride')
@@ -248,15 +252,15 @@ df = processing.create_dataframe(om)
 p_results = processing.param_results(om)
 
 
-
-fn = os.path.join(os.path.dirname(__file__), 'source_x_electricity_hourly.xlsx')
-electricity_bus['sequences'].to_excel(fn)
-
-
-
-fn = os.path.join(os.path.dirname(__file__), 'source_x_electricity_sum_feedin.xlsx')
+fn = os.path.join(os.path.dirname(__file__), 'sum flow elec bus.xlsx')
 electricity_bus['sequences'].sum(axis=0).to_excel(fn)
-      
+     
+fn = os.path.join(os.path.dirname(__file__), 'sum_flow_pvbus.xlsx')
+pv_bus['sequences'].sum(axis=0).to_excel(fn)
+
+fn = os.path.join(os.path.dirname(__file__), 'sum flow wind off bus.xlsx')
+wind_off_bus['sequences'].sum(axis=0).to_excel(fn) 
+
 # plot the time series (sequences) of a specific component/bus
 if plt is not None:
 
@@ -264,6 +268,8 @@ if plt is not None:
             electricity_bus['sequences'].plot(kind='line', drawstyle='steps-post')
             plt.show()
 
+fn = os.path.join(os.path.dirname(__file__), 'electricity bus_sequences.xlsx')
+electricity_bus['sequences'].to_excel(fn)
 
 if plt is not None:
 
@@ -271,7 +277,26 @@ if plt is not None:
             wind_off_bus['sequences'].plot(kind='line', drawstyle='steps-post')
             plt.show()
 
+fn = os.path.join(os.path.dirname(__file__), 'windoffshore bus sequences.xlsx')
+wind_off_bus['sequences'].to_excel(fn)
 
+if plt is not None:
+
+            plt.show()
+            pv_bus['sequences'].plot(kind='line', drawstyle='steps-post')
+            plt.show()
+
+fn = os.path.join(os.path.dirname(__file__), 'pv bus sequences.xlsx')
+pv_bus['sequences'].to_excel(fn)
+
+if plt is not None:
+
+            plt.show()
+            storage['sequences'].plot(kind='line', drawstyle='steps-post')
+            plt.show()
+
+fn = os.path.join(os.path.dirname(__file__), 'storage sequences.xlsx')
+storage['sequences'].to_excel(fn)
 
 # print the solver results
 print('********* Meta results *********')
@@ -279,9 +304,13 @@ pp.pprint(es.energysystem.results['meta'])
 print('')
     
 # print the sums of the flows around the electricity bus
-print('********* Main results *********')
+print('********* Main results electricity bus *********')
 print(electricity_bus['sequences'].sum(axis=0))
           
+# print the sums of the flows around the electricity bus
+print('********* Main results wind off bus *********')
+print(wind_off_bus['sequences'].sum(axis=0))
 
-
-      
+# print the sums of the flows around the electricity bus
+print('********* Main results pv bus *********')
+print(pv_bus['sequences'].sum(axis=0))      

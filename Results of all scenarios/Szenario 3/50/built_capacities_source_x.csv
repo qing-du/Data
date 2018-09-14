@@ -1,0 +1,8 @@
+,,value,oemof_tuple
+pv_CIGS,electricity_pv,27500.0,"(<oemof.solph.network.Source object at 0x0000017DD4FE0EA8>, <oemof.solph.network.Bus object at 0x0000017DC3B400E8>)"
+pv_CdTe,electricity_pv,27500.0,"(<oemof.solph.network.Source object at 0x0000017DD3B7CC78>, <oemof.solph.network.Bus object at 0x0000017DC3B400E8>)"
+pv_Si,electricity_pv,81513.0,"(<oemof.solph.network.Source object at 0x0000017DD4FE0908>, <oemof.solph.network.Bus object at 0x0000017DC3B400E8>)"
+rx,electricity,57686.471,"(<oemof.solph.network.Source object at 0x0000017DCF1653B8>, <oemof.solph.network.Bus object at 0x0000017DC051D548>)"
+wind_off_pure,electricity_wind_off,22500.0,"(<oemof.solph.network.Source object at 0x0000017DCE6F0408>, <oemof.solph.network.Bus object at 0x0000017DCFA90F48>)"
+wind_on_asynchron,electricity,67997.586,"(<oemof.solph.network.Source object at 0x0000017DCE6F0048>, <oemof.solph.network.Bus object at 0x0000017DC051D548>)"
+wind_on_hybrid,electricity,0.0,"(<oemof.solph.network.Source object at 0x0000017DD7EF9728>, <oemof.solph.network.Bus object at 0x0000017DC051D548>)"
